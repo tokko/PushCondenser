@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         FirebaseMessaging.getInstance().subscribeToTopic("test")
 
         val am = getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-        am?.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 60000, PendingIntent.getBroadcast(applicationContext, 0, Intent(PushDigestReceiver.FIRESTORE_ACTION), 0))
+        am?.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 60000, PendingIntent.getBroadcast(applicationContext, 0, Intent(PushDigestReceiver.FIRESTORE_ACTION), PendingIntent.FLAG_IMMUTABLE))
         registerReceiver(PushDigestReceiver(), IntentFilter(PushDigestReceiver.ACTION).apply { addAction(PushDigestReceiver.DELETE); addAction(PushDigestReceiver.FIRESTORE_ACTION) })
 
         supportFragmentManager.beginTransaction().replace(android.R.id.content, FirestoreListFragment()).commit()

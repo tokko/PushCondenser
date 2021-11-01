@@ -1,5 +1,6 @@
 package com.tokko.pushcondenser
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -12,8 +13,8 @@ import com.google.gson.reflect.TypeToken
 import java.util.*
 
 data class Notification(val id: Int, val title: String, val body: String)
+@SuppressLint("MissingFirebaseInstanceTokenRefresh")
 class PushService : FirebaseMessagingService() {
-    val TAG = "SOME TAG LOL"
 
     private fun saveNotification(context: Context, notification: Notification){
        val prefs = context.getSharedPreferences("notifications", Context.MODE_PRIVATE)
@@ -21,6 +22,7 @@ class PushService : FirebaseMessagingService() {
         list.add(notification)
         prefs.edit().putString("notifications", Gson().toJson(list)).apply()
     }
+
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         if (remoteMessage.data.isNotEmpty()) {

@@ -8,7 +8,6 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.util.*
 
 class PushDigestReceiver : BroadcastReceiver() {
 
@@ -37,13 +36,13 @@ class PushDigestReceiver : BroadcastReceiver() {
                 val body = notifications.joinToString(" | ") { it.body }
                 Triple(title, body, DIGEST_ID)
             }
-            val notification = NotificationCompat.Builder(context.applicationContext)
+            val notification = NotificationCompat.Builder(context.applicationContext, "some unique id I guess")
                 .setContentTitle(title)
                 .setContentText(body)
                 .setSmallIcon(android.R.drawable.sym_def_app_icon)
                 .setChannelId("some unique id I guess")
                 .setDeleteIntent(PendingIntent.getBroadcast(context.applicationContext,
-                1, Intent(DELETE).putExtra("id", id), PendingIntent.FLAG_ONE_SHOT))
+                1, Intent(DELETE).putExtra("id", id), PendingIntent.FLAG_IMMUTABLE))
                 .build()
             nm?.notify(id, notification)
         }
@@ -56,9 +55,9 @@ class PushDigestReceiver : BroadcastReceiver() {
     }
 
     companion object{
-        val DIGEST_ID = 1
-        val ACTION = "com.tokko.DIGEST"
-        val DELETE = "com.tokko.DELETE"
-        val FIRESTORE_ACTION = "com.tokko.FIRESTORE_ACTION"
+        const val DIGEST_ID = 1
+        const val ACTION = "com.tokko.DIGEST"
+        const val DELETE = "com.tokko.DELETE"
+        const val FIRESTORE_ACTION = "com.tokko.FIRESTORE_ACTION"
     }
 }

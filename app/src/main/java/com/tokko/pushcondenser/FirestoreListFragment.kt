@@ -1,5 +1,6 @@
 package com.tokko.pushcondenser
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -18,21 +19,20 @@ import com.tokko.pushcondenser.databinding.RecyclerItemBinding
 import com.tokko.pushcondenser.databinding.TextItemBinding
 import com.xwray.groupie.GroupieAdapter
 import com.xwray.groupie.viewbinding.BindableItem
-import org.w3c.dom.Document
 
-class FirrestoreListFragment(): Fragment() {
+class FirestoreListFragment: Fragment() {
 
     private val viewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool()
     private var _binding: FirestoreListFragmentBinding? = null
     private val binding get () = _binding!!
 
-    val mainAdapter = GroupieAdapter()
+    private val mainAdapter = GroupieAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) : View? {
+    ) : View {
         _binding = FirestoreListFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -73,6 +73,7 @@ class FirrestoreListFragment(): Fragment() {
         super.onDestroyView()
         _binding = null
     }
+    @SuppressLint("NotifyDataSetChanged")
     private fun payForward(position: Int, lastSnapshot: DocumentSnapshot){
         if(position+1 >= mainAdapter.itemCount){
             return
@@ -86,7 +87,7 @@ class FirrestoreListFragment(): Fragment() {
 }
 
 class RecyclerItem(var query: Query, val context: Context, val payforward: (Int, DocumentSnapshot) -> Unit) : BindableItem<RecyclerItemBinding>() {
-    val adapter = GroupieAdapter()
+    private val adapter = GroupieAdapter()
     var lastDocumentSnapshot: DocumentSnapshot? = null
 
     override fun bind(viewBinding: RecyclerItemBinding, position: Int) {
@@ -95,7 +96,7 @@ class RecyclerItem(var query: Query, val context: Context, val payforward: (Int,
             override fun canScrollVertically() = true
         }
         viewBinding.pageRecycler.adapter = adapter
-        query.addSnapshotListener { value, error ->
+        query.addSnapshotListener { value, _ ->
             adapter.clear()
             val items = value?.documents?.map { TextItem(it["text"] as String) } ?: emptyList()
             adapter.addAll(
@@ -114,7 +115,7 @@ class RecyclerItem(var query: Query, val context: Context, val payforward: (Int,
 
 }
 
-class TextItem(val text: String) : BindableItem<TextItemBinding>() {
+class TextItem(private val text: String) : BindableItem<TextItemBinding>() {
 
     override fun bind(viewBinding: TextItemBinding, position: Int) {
         viewBinding.text.text = text

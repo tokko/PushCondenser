@@ -3,6 +3,7 @@
     package="com.tokko.pushcondenser">
 
     <application
+        android:fullBackupOnly="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -12,7 +13,7 @@
         <receiver
             android:name=".PushDigestReceiver"
             android:enabled="true"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.tokko.DIGEST" />
                 <action android:name="com.tokko.DELETE" />
@@ -23,13 +24,14 @@
         <service
             android:name=".PushService"
             android:enabled="true"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
